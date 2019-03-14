@@ -1,0 +1,51 @@
+<style>
+
+body {
+  background:#323232;
+ /* background-image: url("https://www.codot.gov/assets/sitebackground.jpg");
+ background-repeat:no-repeat;*/
+}
+
+.feedback {
+  background-color : #31B0D5;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border-color: #46b8da;
+}
+
+/* feedback modal buttons */
+.feedbackbtn {
+     list-style-type:none;
+     margin:8px 0 0 0;
+     padding:0;
+}
+
+.feedbackbtn input[type="radio"] {
+    opacity:0.011;
+    z-index:100;
+}
+
+.feedbackbtn input[type="radio"]:checked + label {
+    background:#e19933;
+}
+
+.feedbackbtn li {
+     float:left;
+     position: relative;
+     margin-left: 12px;
+}
+
+.feedbackbtn li:first-child {
+  margin-left:18%;
+}
+
+#result {
+ color:#03944b;
+ margin: 2px 20px 20px 20px;
+ font-size: 1.1rem;
+}
+
+</style>
+
+

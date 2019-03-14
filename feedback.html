@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="shortcut icon" type="image/png" href="https://www.codot.gov/++theme++cdot.theme/favicon.ico"/>
+  
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
+     <?!= include('stylesheet'); ?>
+   
+     
+
+</head>
+<body>
+
+<!-- feedback modal -->
+  <div class="" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      
+        <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
+        
+       
+        <img style="float:right; max-height: 115px;  max-width: 115px; " class="img-responsive" src="https://drive.google.com/uc?id=1Hg4Ap0a_la8wHrMLpxwWA8XD7qVNjiwt" />
+        
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group" id="didYouFindQuestions">
+            <label for="question1" class="col-form-label">Did you find what you were looking for today?</label>
+            <br>
+            <ul class="feedbackbtn">
+            <li>
+            <input id="fYes" type="radio" name="options" value="yes" autocomplete="off"/> 
+            <label for="fYes" class="btn btn-light" id="form_buttons"> Yes </label> 
+            </li>
+            
+            <li>     
+            <input id="fNo" type="radio" name="options" value="yes" autocomplete="off"/> 
+            <label for="fNo" class="btn btn-light"> Nope </label>
+            </li>
+            
+            <li>            
+            <input id="fBrowse" type="radio" name="options" value="yes" autocomplete="off"/> 
+            <label for="fBrowse" class="btn btn-light"> Just Browsing </label>          
+            </li>
+            </ul>
+          </div>
+          <div class="form-group">
+          <!-- What can we do to improve the Office of Process Improvement pages on the CDOT website -->
+            <label for="message-text" class="col-form-label">What can we do to improve your experience of the Office of Process Improvement website (Web Design, Content, Website flow, etc)?</label>
+            <textarea class="form-control" id="improvementFeedback"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <p style="float: left; font-size: .9rem; margin-right: 70px;"> *Feedback is anonymous </p>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="feedbackSaveBtn" type="button" class="btn btn-primary" style="background-color: #428bca;">Submit Feedback</button>
+        
+      </div>
+      <div id='result'></div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+function goBack() {
+ 
+ window.history.back(); 
+}
+
+//Get Values from Feedback Modal and run feedbackSubmit() to write to the google sheet
+
+function feedbackLogged() {
+  var $result = $("#result");
+  $result.text("Thank you for taking the time to submit feedback, we really value your input. "
+  + "You are now being redirected back to your page.");
+  
+  var improvementFeedback = $("#improvementFeedback").val();
+  
+
+  
+  var currentdate = new Date(); 
+  var timestamp = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+ 
+  if(improvementFeedback == '') {
+    improvementFeedback = "NOTHING ENTERED"
+  }
+  
+  var lookingFor = $("#notFoundForm").val()
+  if (typeof lookingFor == 'undefined' || lookingFor == ''){
+    lookingFor = "NOTHING ENTERED"
+  }  
+  
+  var didYouFind = "BUTTON UNCHECKED"
+  if(document.getElementById('fYes').checked) {
+    didYouFind = "Yes"
+  }else if(document.getElementById('fNo').checked) {
+    didYouFind = "No"
+  }else if(document.getElementById('fBrowse').checked) {
+    didYouFind = "Just Browsing"
+  }else {
+    console.log("No button selected for 'Did you find what you were looking for today?'");
+  }
+  
+ 
+//  var url = $.cookie("previousUrl", window.location.href, {path:"/"});
+//  console.log(url);
+//  console.log(typeof(url));
+  var url = "unknown for now";
+  console.log(didYouFind, improvementFeedback, url, lookingFor, timestamp);
+  var count = 0;
+  if( didYouFind == "BUTTON UNCHECKED" && improvementFeedback == "NOTHING ENTERED" && lookingFor == "NOTHING ENTERED") {
+   console.log("Nothing Entered # of times: " + count);
+   count = count + 1;
+  }
+  google.script.run.feedbackSubmit(didYouFind, improvementFeedback, url, lookingFor, timestamp);
+  
+  setTimeout(goBack, 5350);
+  
+}
+
+document.getElementById("feedbackSaveBtn").addEventListener("click", function(){ 
+  feedbackLogged(); });
+ 
+  
+function notFound() {
+  var didYouFind = document.getElementById('notFound')
+  console.log("is it here");
+  console.log(didYouFind);
+  
+  if(didYouFind == null){
+  var notFound = $('<div>').attr({
+  "class":"form-group",
+  "alt":"not found",
+  "id":"notFound"
+  }).appendTo('#didYouFindQuestions');
+  
+  var notFoundLabel = $('<label>').attr({
+  "class":"col-form-label",
+  "for":"message-text"
+  }).css({
+  "width": "100%",
+  "margin-top":"5px"
+  }).html("What were you looking for?").appendTo(notFound);
+  
+  var notFoundForm = $('<textarea>').attr({
+  "class":"form-control",
+  "id":"notFoundForm"
+  }).appendTo(notFoundLabel);
+ }
+ else {
+  $("#notFound").css("display","block");
+ }
+// <label for="message-text" class="col-form-label">What can we do to improve the Office of Process Improvement website?</label>
+// <textarea class="form-control" id="improvementFeedback"></textarea>
+ 
+}
+  
+document.getElementById("fNo").addEventListener("click", function(){ 
+  notFound(); });  
+  
+function closeNotFound() {
+
+ $("#notFound").css("display","none");
+}
+  
+document.getElementById("fYes").addEventListener("click", function(){ 
+  closeNotFound(); });
+  
+document.getElementById("fBrowse").addEventListener("click", function(){ 
+  closeNotFound(); });
+ 
+
+  
+
+</script>
+</body>
+</html>
+
+
+
