@@ -13,4 +13,13 @@ If you aren't using a CMS system then first make a a DIV placeholder with a uniq
 See the relevant files for how it was set up. There is a Google Apps Script file and an HTML page. 
 
 
+## Button on Site
+
 ![feedback btn](https://github.com/ninjaalex888/Feedback-Button-on-Website/blob/master/unnamed.png "Example Button")
+
+## Example Survey Modal
+
+![example survey modal](https://github.com/ninjaalex888/Feedback-Button-on-Website/blob/master/feedback%20modal.PNG "Example Survey")
+
+
+
